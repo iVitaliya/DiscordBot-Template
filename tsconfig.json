@@ -1,0 +1,63 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "NodeNext",
+		"lib": [
+            "ES2020",
+            "ES2020.BigInt",
+            "ES2020.Intl",
+            "ES2020.Promise",
+            "ES2020.SharedMemory",
+            "ES2020.String",
+            "ES2020.Symbol.WellKnown"
+        ],
+		"allowJs": true,
+		"checkJs": true,
+		"sourceMap": true,
+		"outDir": "dist",
+		"rootDir": "./",
+		"composite": true,
+		"tsBuildInfoFile": "./ts.build.info.json",
+		"removeComments": true,
+		"noEmit": true,
+		"importHelpers": true, 
+		"downlevelIteration": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true,
+		"strictPropertyInitialization": true,
+		"noImplicitThis": true,
+		"alwaysStrict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true, 
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"moduleResolution": "NodeNext",
+		"baseUrl": "src",
+		"paths": {
+            "@lib": ["Lib/index"]
+        },
+		"typeRoots": [
+			"./node_modules/@types",
+		],
+		"esModuleInterop": true,"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true
+	},
+	"include": [
+		"src",
+		"package.json"
+	],
+	"exclude": [
+		"node_modules",
+		"Configurations",
+		"dist"
+	]
+}
