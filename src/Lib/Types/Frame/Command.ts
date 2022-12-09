@@ -1,7 +1,7 @@
 import { PermissionResolvable } from "discord.js";
 
 
-export type ICommandCategory = "Utilities" | "Staff" | "Developer" | "Fun";
+export type ICommandCategory = "General" | "Utilities" | "Staff" | "Developer" | "Fun";
 export interface ICommand {
     category: ICommandCategory;
     name: string;
