@@ -28,7 +28,15 @@ import {
 	WarnLog,
 	MuteLog,
 	KickLog,
-	BanLog
+	BanLog,
+
+	ChannelFetcher,
+	CommandFetcher,
+	EmojiFetcher,
+	GuildFetcher,
+	GuildMemberFetcher,
+	RoleFetcher,
+	UserFetcher
 } from "@lib";
 
 
@@ -68,7 +76,13 @@ interface Formatting {
 }
 
 interface Fetchers {
-
+	channel: typeof ChannelFetcher;
+	command: typeof CommandFetcher;
+	emoji: typeof EmojiFetcher;
+	guild: typeof GuildFetcher;
+	member: typeof GuildMemberFetcher;
+	role: typeof RoleFetcher;
+	user: typeof UserFetcher;
 }
 
 export class DiscordClient extends Client  {
@@ -76,7 +90,7 @@ export class DiscordClient extends Client  {
 	public swearWords: any;
 	public blacklist: any;
 
-	public db: (client: DiscordClient, guildID: string) => IDatabase;
+	public db: () => IDatabase = Database;
 
 	public colors: typeof DiscordColors = DiscordColors;
 	public cooldown: Collection<string, number | any> = new Collection<string, number | any>();
@@ -138,17 +152,21 @@ export class DiscordClient extends Client  {
         this.format.permission = PermissionFormat;
         this.format.guild = GuildFormat;
 
-        // FETCHERS
+        this.fetch.channel = ChannelFetcher;
+		this.fetch.command = CommandFetcher;
+		this.fetch.emoji = EmojiFetcher;
+		this.fetch.guild = GuildFetcher;
+		this.fetch.member = GuildMemberFetcher;
+		this.fetch.role = RoleFetcher;
+		this.fetch.user = UserFetcher;
     }
 
     public start(): void {
-		this.db = Database;
-
 		const token = Config.get("TOKEN");
 		if (!token) {
-			
+			throw new Error("No token was set in the .env file, please paste after TOKEN= the token, location: Configurations/.env");
 		}
 
-        super.login();
+        super.login(token);
     }
 }
