@@ -11,3 +11,5 @@ export async function getGIF(gifType: GifType) {
     
     return res;
 }
+
+// https://weebyapi.xyz/api/docs
