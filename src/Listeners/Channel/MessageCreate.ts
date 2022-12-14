@@ -22,7 +22,7 @@ export class MessageCreateListener extends Listener {
         const command = new this.client.fetch.command(this.client).get(cmd!);
         
         if (command) {
-            
+            // https://github.com/iVitaliya/Unarity/blob/master/src/events/guilds/message.js
         }  
     }
 }
