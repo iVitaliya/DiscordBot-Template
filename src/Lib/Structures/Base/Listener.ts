@@ -1,12 +1,12 @@
 import { ClientEvents } from "discord.js";
 
-import { DiscordClient, IListener } from "@lib";
+import { DiscordClient, IListener, ListenerCategory } from "@lib";
 
 
 export class Listener implements IListener {
-    private client: DiscordClient;
+    public client: DiscordClient;
 
-    category: string;
+    category: ListenerCategory;
     name: keyof ClientEvents;
     description: string;
     once: boolean;
@@ -20,7 +20,7 @@ export class Listener implements IListener {
         this.once = data.once;
     }
 
-    public async exec(...args: unknown[]): Promise<unknown> {
+    public async exec(...args: unknown[]): Promise<unknown | void> {
         throw this.client.logger.error("This operation doesn't do anything!");
     }
 }

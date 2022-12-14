@@ -1,4 +1,4 @@
-import { Collection } from "discord.js";
+import { Collection, GuildMember, PermissionResolvable } from "discord.js";
 import { readdirSync } from "fs";
 import { resolve, join } from "path";
 
@@ -58,5 +58,9 @@ export class Processor {
         }
 
         return map;
+    }
+
+    public static CheckPermissions(member: GuildMember, permissions: PermissionResolvable | PermissionResolvable[]) {
+        if (!Array.isArray(permissions)) return member.permissions.has(permissions)
     }
 }

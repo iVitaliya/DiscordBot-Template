@@ -2,7 +2,6 @@ import { ChannelType, Guild } from "discord.js";
 
 import { DiscordClient } from "@lib";
 
-
 type ChannelTypes = ChannelType.GuildText | ChannelType.PrivateThread | ChannelType.PublicThread | ChannelType.GuildForum;
 export class ChannelFetcher {
     private client: DiscordClient;
