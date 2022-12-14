@@ -60,6 +60,7 @@ export class Processor {
         return map;
     }
 
+    // https://github.com/iVitaliya/Unarity/blob/5ee4db186a66e47531e47bcc02074c4aba2d5cb3/src/lib/Client/Handler.js#L60
     public static CheckPermissions(member: GuildMember, permissions: PermissionResolvable | PermissionResolvable[]) {
         if (!Array.isArray(permissions)) return member.permissions.has(permissions)
     }
