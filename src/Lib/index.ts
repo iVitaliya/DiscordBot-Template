@@ -43,6 +43,7 @@ export * from "./Utils/Helpers";
 export * from "./Utils/Logger";
 export * from "./Utils/Pagination";
 export * from "./Utils/Processor";
+export * from "./Utils/Timer";
 export * from "./Utils/Formatting/Array";
 export * from "./Utils/Formatting/Guild";
 export * from "./Utils/Formatting/Permission";

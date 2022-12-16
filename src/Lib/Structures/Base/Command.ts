@@ -27,7 +27,7 @@ export class Command implements ICommand {
 
     settings: {
         nsfw: boolean;
-        channel: "DM" | "GUILD";
+        admin: boolean;
         owner: boolean;
         developer: boolean;
 
@@ -58,7 +58,7 @@ export class Command implements ICommand {
 
         this.settings = data.settings;
         this.settings.nsfw = data.settings.nsfw;
-        this.settings.channel = data.settings.channel;
+        this.settings.admin = data.settings.admin;
         this.settings.owner = data.settings.owner;
         this.settings.developer = data.settings.developer;
         this.settings.cooldown = data.settings.cooldown;

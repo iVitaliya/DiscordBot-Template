@@ -6,6 +6,8 @@ import {
     MessageCreateOptions as MessageOptions,
     PartialDMChannel,
     PartialGroupDMChannel,
+    PrivateThreadChannel,
+    PublicThreadChannel,
     TextBasedChannel as AllTextBasedChannels,
     User
 } from "discord.js";
@@ -14,7 +16,7 @@ import { Embed } from "@lib";
 
 
 /** This type is used to detect only server channels. */
-export type GuildBasedTextChannels = Exclude<AllTextBasedChannels, DMChannel | PartialDMChannel | PartialGroupDMChannel>;
+export type GuildBasedTextChannels = Exclude<AllTextBasedChannels, DMChannel | PartialDMChannel | PartialGroupDMChannel | PrivateThreadChannel | PublicThreadChannel>;
 /** This type is used to detect only DM channels. */
 export type DMBasedTextChannels = DMChannel | PartialDMChannel | PartialGroupDMChannel;
 

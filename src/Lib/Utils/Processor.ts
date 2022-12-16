@@ -5,6 +5,13 @@ import { resolve, join } from "path";
 import { DiscordClient, Command } from "../index";
 
 
+interface ICheckPermissions {
+    /** The missing permissions */
+    missing: string;
+    /** If said user is missing permissions */
+    missing_permissions: boolean;
+}
+
 export class Processor {
     private client: DiscordClient;
 
@@ -60,7 +67,29 @@ export class Processor {
         return map;
     }
 
-    public static CheckPermissions(member: GuildMember, permissions: PermissionResolvable | PermissionResolvable[]) {
-        if (!Array.isArray(permissions)) return member.permissions.has(permissions)
+    public static CheckPermissions(member: GuildMember, permissions: PermissionResolvable | PermissionResolvable[]): ICheckPermissions {
+        if (!Array.isArray(permissions)) {
+            const hasPerm = member.permissions.has(permissions);
+
+            return {
+                missing: !hasPerm ? permissions : "",
+                missing_permissions: !hasPerm ? false : true
+            } as ICheckPermissions;
+        }
+        
+        let str: string = "";
+        let opt = {} as ICheckPermissions;
+        for (let i = 0; i < permissions.length; i++) {
+            let hasPerm = member.permissions.has(permissions[i]!);
+
+            !hasPerm ? str+=`${permissions[i]}, ` : str+="";
+        }
+
+        opt = {
+            missing: str.slice(str.length-1, str.length),
+            missing_permissions: str.length > 1
+        };
+
+        return opt;
     }
 }

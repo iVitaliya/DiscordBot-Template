@@ -24,7 +24,7 @@ export interface ICommand {
 
     settings: {
         nsfw: boolean;
-        channel: "DM" | "GUILD";
+        admin: boolean;
         owner: boolean;
         developer: boolean;
 
