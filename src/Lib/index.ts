@@ -37,6 +37,7 @@ export * from "./Fetchers/User";
 // ===============
 // [[[[ UTILS ]]]]
 // ===============
+export * from "./Utils/CommandData";
 export * from "./Utils/ForbiddenKeys";
 export * from "./Utils/Fun";
 export * from "./Utils/Helpers";

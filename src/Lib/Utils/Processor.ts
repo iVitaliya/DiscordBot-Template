@@ -1,8 +1,8 @@
 import { Collection, GuildMember, PermissionResolvable } from "discord.js";
 import { readdirSync } from "fs";
-import { resolve, join } from "path";
+import { join, resolve } from "path";
 
-import { DiscordClient, Command } from "../index";
+import { Command, DiscordClient } from "../index";
 
 
 interface ICheckPermissions {
@@ -22,7 +22,7 @@ export class Processor {
     public listeners(): void {
         const folder = readdirSync(resolve(join(__dirname, '..', '..', 'Listeners')));
 
-        for (let sub_folder of folder) {
+        for (const sub_folder of folder) {
             const files: string[] = readdirSync(resolve(join(__dirname, "..", "..", "Listeners", sub_folder))).filter((f: string) => f.endsWith(".js"));
 
             for (const file of files) {
@@ -57,7 +57,7 @@ export class Processor {
                     map.set(cmd.name, cmd);
 
                     this.client.logger.info(`-- ✅ ${file}`)
-                } catch (err) {
+                } catch (_err) {
                     this.client.logger.error(`-- ❌ ${file}`);
                 }
             }
@@ -76,17 +76,17 @@ export class Processor {
                 missing_permissions: !hasPerm ? false : true
             } as ICheckPermissions;
         }
-        
-        let str: string = "";
-        let opt = {} as ICheckPermissions;
-        for (let i = 0; i < permissions.length; i++) {
-            let hasPerm = member.permissions.has(permissions[i]!);
 
-            !hasPerm ? str+=`${permissions[i]}, ` : str+="";
+        let str = "";
+        let opt = {} as ICheckPermissions;
+        for (const element of permissions) {
+            const hasPerm = member.permissions.has(element, true);
+
+            !hasPerm ? str += `${element}, ` : str += "";
         }
 
         opt = {
-            missing: str.slice(str.length-1, str.length),
+            missing: str.slice(str.length - 1, str.length),
             missing_permissions: str.length > 1
         };
 

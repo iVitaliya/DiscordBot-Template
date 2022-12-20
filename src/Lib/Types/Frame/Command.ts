@@ -8,6 +8,7 @@ export interface ICommand {
     aliases: string[];
     usages: string | string[];
     examples: string | string[];
+    required_args: number;
 
     description: string;
 
@@ -27,10 +28,6 @@ export interface ICommand {
         admin: boolean;
         owner: boolean;
         developer: boolean;
-
-        cooldown: {
-            duration: number;
-            limit: number;
-        };
+        cooldown: number;
     };
 }

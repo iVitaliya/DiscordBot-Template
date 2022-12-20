@@ -1,6 +1,5 @@
 import {
     DMChannel,
-    Guild,
     GuildMember as Member,
     Message,
     MessageCreateOptions as MessageOptions,
@@ -38,7 +37,7 @@ interface ISendMessage {
  * for getting the author as member and user and some other properties. */
 export interface IMessage {
     sender: {
-        member: GuildMember;
+        member: Member;
         user: User;
         tag: string;
         id: string | bigint;
@@ -62,4 +61,10 @@ export interface IUser {
 export interface IGuild {
     created: ITimestamp;
     prefix: Promise<string>;
+}
+
+/** ICooldown is an interface which is used to set the cooldown for a command */
+export interface ICooldown {
+    since: Date;
+    
 }

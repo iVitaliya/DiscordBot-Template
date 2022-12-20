@@ -1,4 +1,4 @@
-import { PermissionResolvable, Message, GuildMember, Guild } from "discord.js";
+import { Guild, GuildMember, Message, PermissionResolvable } from "discord.js";
 
 import { DiscordClient, GuildBasedTextChannels, ICommand, ICommandCategory } from "@lib";
 
@@ -11,6 +11,7 @@ export class Command implements ICommand {
     aliases: string[];
     usages: string | string[];
     examples: string | string[];
+    required_args: number;
 
     description: string;
 
@@ -30,11 +31,7 @@ export class Command implements ICommand {
         admin: boolean;
         owner: boolean;
         developer: boolean;
-
-        cooldown: {
-            duration: number;
-            limit: number;
-        };
+        cooldown: number;
     };
 
     public constructor(client: DiscordClient, data: ICommand) {
@@ -45,6 +42,7 @@ export class Command implements ICommand {
         this.aliases = data.aliases;
         this.usages = data.usages;
         this.examples = data.examples;
+        this.required_args = data.required_args;
 
         this.description = data.description;
 
@@ -62,8 +60,6 @@ export class Command implements ICommand {
         this.settings.owner = data.settings.owner;
         this.settings.developer = data.settings.developer;
         this.settings.cooldown = data.settings.cooldown;
-        this.settings.cooldown.duration = data.settings.cooldown.duration;
-        this.settings.cooldown.limit = data.settings.cooldown.limit;
     }
 
     public async exec(message: Message, args: string[], member: GuildMember, channel: GuildBasedTextChannels, guild: Guild): Promise<Message | void> {

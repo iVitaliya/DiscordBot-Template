@@ -27,6 +27,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9"
+    "@types/node": "^18.11.9",
+    "tslib": "^2.4.1"
   }
 }

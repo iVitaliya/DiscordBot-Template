@@ -1,21 +1,20 @@
 import {
-    ChannelType, 
-    Guild, 
-    GuildMember, 
+    ChannelType,
+    GuildMember as Member,
     Message
 } from "discord.js";
 
 import {
-    Colors,
-    Command, 
-    Config, 
-    DiscordClient, 
-    Embed, 
-    FooterTime, 
-    GuildBasedTextChannels, 
-    Icons, 
-    Listener, 
-    Processor
+    Command,
+    Config,
+    DiscordClient,
+    GuildBasedTextChannels,
+    Listener,
+    Processor,
+    SendCooldown,
+    SendNoArgs,
+    SendPerms,
+    SendSettings
 } from "@lib";
 
 
@@ -30,7 +29,11 @@ export class MessageCreateListener extends Listener {
     }
 
     public override async exec(message: Message): Promise<void> {
-        const Prefix = this.client.prefix["default"] || Config.get("PREFIX") || "?";
+        if (!this.client.prefix[message.guild!.id]) {
+            this.client.prefix[message.guild!.id] = await this.client.db().core.get(`${message.guild!.id}.prefix`, "?");
+        }
+
+        const Prefix = this.client.prefix[message.guild!.id] || Config.get("PREFIX") || "?";
         if (message.author.bot) return;
         if (message.channel.type === ChannelType.DM) return;
         if (!message.content.startsWith(Prefix)) return;
@@ -49,87 +52,27 @@ export class MessageCreateListener extends Listener {
 
             await SendSettings(message, message.channel as GuildBasedTextChannels, message.guild!, command);
 
-            
+            await SendCooldown(this.client, {
+                message: message,
+                channel: message.channel as GuildBasedTextChannels,
+                cmd: command
+            });
+
+            await SendNoArgs(this.client, message.channel as GuildBasedTextChannels, args, command);
+
+            command.exec(message, args, message.member!, message.channel as GuildBasedTextChannels, message.guild!);
         }
     }
 }
 
-async function SendCooldown(message: Message, cmd: Command) {
-
-}
-
-async function SendSettings(message: Message, channel: GuildBasedTextChannels, guild: Guild, cmd: Command) {
-    if (cmd.settings.nsfw && !channel.nsfw) {
-        await channel.send({
-            embeds: [
-                new Embed()
-                    .setAuthor({ name: "Permission Denied", icon_url: Icons.Failed })
-                    .setDescription(`\`${cmd.name}\` requires to be executed in a channel marked as nsfw, make sure it's marked as one or ask an server administrator to mark a channel as nsfw.`)
-                    .setColor(Colors.Failed)
-                    .setFooter({ text: FooterTime })
-                    .build()
-            ]
-        });      
-    }
-
-    if (guild.ownerId !== message.author.id && cmd.settings.owner) {
-        await channel.send({
-            embeds: [
-                new Embed()
-                    .setAuthor({ name: "Permission Denied", icon_url: Icons.Failed })
-                    .setDescription(`\`${cmd.name}\` can only be used by the server owner.`)
-                    .setColor(Colors.Failed)
-                    .setFooter({ text: FooterTime })
-                    .build()
-            ]
-        });
-    }
-
-    if (!Processor.CheckPermissions(message.member!, "Administrator").missing_permissions && cmd.settings.admin) {
-        await channel.send({
-            embeds: [
-                new Embed()
-                    .setAuthor({ name: "Permission Denied", icon_url: Icons.Failed })
-                    .setDescription(`\`${cmd.name}\` can only be used by the server admins.`)
-                    .setColor(Colors.Failed)
-                    .setFooter({ text: FooterTime })
-                    .build()
-            ]
-        });
-    }
-}
-
-async function SendPerms(msg: Message, permissions: string, cmd: string, client: boolean, channel: boolean) {
-    if (permissions.length < 1) {
-        return;
-    }
-
-    await msg.channel.send({
-        embeds: [
-            new Embed()
-                .setAuthor({ name: "Permission Denied", icon_url: Icons.Failed })
-                .setDescription(client
-                    ? `I'm missing ${channel ? "channel" : "server"} permission so I couldn't execute the requested operation.`
-                    : `You're missing ${channel ? "channel" : "server"} permissions so I couldn't execute the requested operation.`)
-                .setColor(Colors.Failed)
-                .addField({ name: "Missing Permissions", value: permissions, inline: true })
-                .addField({ name: "Occurred Command", value: cmd, inline: true })
-                .setFooter({ text: FooterTime })
-                .build()
-        ]
-    });
-
-    return;
-}
-
-function ChannelPermissions(member: GuildMember, cmd: Command) {
+function ChannelPermissions(member: Member, cmd: Command) {
     return {
         client: Processor.CheckPermissions(member, cmd.permissions.channel.client),
         user: Processor.CheckPermissions(member, cmd.permissions.channel.user)
     };
 }
 
-function ServerPermisions(member: GuildMember, cmd: Command) {
+function ServerPermisions(member: Member, cmd: Command) {
     return {
         client: Processor.CheckPermissions(member, cmd.permissions.server.client),
         user: Processor.CheckPermissions(member, cmd.permissions.server.user)

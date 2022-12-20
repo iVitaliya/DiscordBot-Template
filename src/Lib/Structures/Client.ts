@@ -1,43 +1,15 @@
 // The class
 import {
-    Client, Partials, GatewayIntentBits,
-    Collection, LifetimeSweepOptions,
-    SweepOptions, GuildBan, MessageReaction,
-    GuildMember, User, VoiceState,
-    Presence, ThreadMember, StageInstance,
-    GuildEmoji, Sticker
+	Client, Collection, GatewayIntentBits, GuildBan, GuildEmoji, GuildMember, LifetimeSweepOptions, MessageReaction, Partials, Presence, StageInstance, Sticker, SweepOptions, ThreadMember, User, VoiceState
 } from "discord.js";
 
-import pkg from "../../../package.json";
 import {
-	Config,
+	ArrayFormat, BanLog,
 
-	Command,
-	Embed,
-
-	Logger,
-	Processor,
-	StringFormat,
-	ArrayFormat,
-	PermissionFormat,
-	GuildFormat,
-
-	IDatabase,
-	Database,
-
-	WarnLog,
-	MuteLog,
-	KickLog,
-	BanLog,
-
-	ChannelFetcher,
-	CommandFetcher,
-	EmojiFetcher,
-	GuildFetcher,
-	GuildMemberFetcher,
-	RoleFetcher,
-	UserFetcher
+	ChannelFetcher, Command, CommandFetcher, Config, Database, Embed, EmojiFetcher,
+	GuildFetcher, GuildFormat, GuildMemberFetcher, IDatabase, KickLog, Logger, MuteLog, PermissionFormat, Processor, RoleFetcher, StringFormat, UserFetcher, WarnLog
 } from "@lib";
+import pkg from "../../../package.json";
 
 
 function Sweeper() {
@@ -59,13 +31,13 @@ function Sweeper() {
 }
 
 enum DiscordColors {
-    BASE = '00ff81',
-    WARN = 'f0f725',
-    MUTE = '2560f7',
-    KICK = 'f79525',
-    BAN = 'f73625',
-    BUGS = '777d84',
-    ERROR = 'f2594b'
+	BASE = '00ff81',
+	WARN = 'f0f725',
+	MUTE = '2560f7',
+	KICK = 'f79525',
+	BAN = 'f73625',
+	BUGS = '777d84',
+	ERROR = 'f2594b'
 }
 
 interface Formatting {
@@ -85,15 +57,16 @@ interface Fetchers {
 	user: typeof UserFetcher;
 }
 
-export class DiscordClient extends Client  {
-    public prefix: any;
+export class DiscordClient extends Client {
+	public prefix: any;
 	public swearWords: any;
 	public blacklist: any;
 
 	public db: () => IDatabase = Database;
 
 	public colors: typeof DiscordColors = DiscordColors;
-	public cooldown: Collection<string, number | any> = new Collection<string, number | any>();
+	public cooldownCount: Map<string, number> = new Map<string, number>();
+	public cooldown: Map<string, Collection<string, number>> = new Map<string, Collection<string, number>>();
 	public commands: Collection<string, Command>;
 
 	public embed: typeof Embed = Embed;
@@ -103,16 +76,16 @@ export class DiscordClient extends Client  {
 	public fetch = {} as Fetchers;
 	public capitalise = (str: string) => str.split(' ').map(str => str.slice(0, 1).toUpperCase() + str.slice(1)).join(' ');
 
-    public caches = {
-        invites: new Collection<string, Collection<string, NodeJS.Timeout>>(),
-        warns: new Collection<string, WarnLog>(),
-        mutes: new Collection<string, MuteLog>(),
-        kicks: new Collection<string, KickLog>(),
-        bans: new Collection<string, BanLog>()
-    };
+	public caches = {
+		invites: new Collection<string, Collection<string, NodeJS.Timeout>>(),
+		warns: new Collection<string, WarnLog>(),
+		mutes: new Collection<string, MuteLog>(),
+		kicks: new Collection<string, KickLog>(),
+		bans: new Collection<string, BanLog>()
+	};
 
-    public constructor() {
-        super({
+	public constructor() {
+		super({
 			intents: [
 				GatewayIntentBits.AutoModerationConfiguration, GatewayIntentBits.AutoModerationExecution,
 				GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildInvites,
@@ -144,29 +117,29 @@ export class DiscordClient extends Client  {
 			}
 		});
 
-        new Processor(this).listeners();
-        this.commands = new Processor(this).commands();
+		new Processor(this).listeners();
+		this.commands = new Processor(this).commands();
 
-        this.format.string = StringFormat;
-        this.format.array = ArrayFormat;
-        this.format.permission = PermissionFormat;
-        this.format.guild = GuildFormat;
+		this.format.string = StringFormat;
+		this.format.array = ArrayFormat;
+		this.format.permission = PermissionFormat;
+		this.format.guild = GuildFormat;
 
-        this.fetch.channel = ChannelFetcher;
+		this.fetch.channel = ChannelFetcher;
 		this.fetch.command = CommandFetcher;
 		this.fetch.emoji = EmojiFetcher;
 		this.fetch.guild = GuildFetcher;
 		this.fetch.member = GuildMemberFetcher;
 		this.fetch.role = RoleFetcher;
 		this.fetch.user = UserFetcher;
-    }
+	}
 
-    public start(): void {
+	public start(): void {
 		const token = Config.get("TOKEN");
 		if (!token) {
 			throw new Error("No token was set in the .env file, please paste after TOKEN= the token, location: Configurations/.env");
 		}
 
-        super.login(token);
-    }
+		super.login(token);
+	}
 }
