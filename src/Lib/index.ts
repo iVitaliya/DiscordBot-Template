@@ -11,6 +11,7 @@ export * from "./Types/Frame/Command";
 // ================
 // [[[[ CONFIG ]]]]
 // ================
+export * from "./Config/Constants";
 export * from "./Config/Environment";
 export * from "./Config/EmbedUsages";
 
@@ -37,6 +38,7 @@ export * from "./Fetchers/User";
 // ===============
 // [[[[ UTILS ]]]]
 // ===============
+export * from "./Utils/Channelizer";
 export * from "./Utils/CommandData";
 export * from "./Utils/ForbiddenKeys";
 export * from "./Utils/Fun";

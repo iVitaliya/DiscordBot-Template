@@ -4,7 +4,7 @@ import { DiscordClient, GuildBasedTextChannels, ICommand, ICommandCategory } fro
 
 
 export class Command implements ICommand {
-    private client: DiscordClient;
+    public client: DiscordClient;
 
     category: ICommandCategory;
     name: string;

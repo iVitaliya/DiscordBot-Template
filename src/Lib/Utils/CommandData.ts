@@ -149,5 +149,9 @@ export async function SendNoArgs(client: DiscordClient, channel: GuildBasedTextC
                     .build()
             ]
         });
-    } else return;
+    } else if (cmd.required_args === -1) {
+        return;
+    } else {
+        return;
+    }
 }

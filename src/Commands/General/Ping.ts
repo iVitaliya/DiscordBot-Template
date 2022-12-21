@@ -1,5 +1,18 @@
-import { Command, DiscordClient, GuildBasedTextChannels } from "@lib";
-import { Message, GuildMember, Guild } from "discord.js";
+import {
+    Guild,
+    GuildMember,
+    Message
+} from "discord.js";
+
+import {
+    Colors,
+    Command,
+    DiscordClient,
+    Embed,
+    FooterTime,
+    GuildBasedTextChannels,
+    Icons
+} from "@lib";
 
 
 export class PingCommand extends Command {
@@ -11,6 +24,7 @@ export class PingCommand extends Command {
             examples: "ping",
             usages: "ping",
             description: "Retrieves the ping of the bot towards Discord and back",
+            required_args: 0,
 
             permissions: {
                 channel: {
@@ -25,19 +39,29 @@ export class PingCommand extends Command {
 
             settings: {
                 nsfw: false,
-                channel: "GUILD",
+                admin: false,
                 owner: false,
                 developer: false,
-
-                cooldown: {
-                    duration: 3000,
-                    limit: 3
-                }
+                cooldown: 3
             }
         });
     }
 
-    public override exec(message: Message<boolean>, args: string[], member: GuildMember, channel: GuildBasedTextChannels, guild: Guild): Promise<void | Message<boolean>> {
-        //
+    public override async exec(_message: Message<boolean>, _args: string[], _member: GuildMember, channel: GuildBasedTextChannels, _guild: Guild): Promise<void | Message<boolean>> {
+        const msg = await channel.send("🏓 Retrieving ping...");
+
+        await msg.edit({
+            content: "",
+            embeds: [
+                new Embed()
+                    .setAuthor({ name: "Ping : Success", icon_url: Icons.Success })
+                    .setColor(Colors.Main)
+                    .setDescription([
+                        `**Message Latency** ${Math.abs(msg.createdAt.getMilliseconds() - Date.now())}ms`,
+                        `**API Latency** ${Math.round(this.client.ws.ping)}ms`
+                    ].join("\n"))
+                    .setFooter({ text: FooterTime })
+            ]
+        });
     }
 }

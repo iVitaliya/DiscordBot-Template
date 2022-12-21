@@ -8,6 +8,7 @@ import {
     BasicPager,
     ButtonID,
     Embed,
+    FooterTime,
     GuildBasedTextChannels
 } from "@lib";
 
@@ -26,7 +27,7 @@ export class Pagination {
     private arr: string[] | any[];
     private itemsPerPage: number;
     private msg!: Message;
-    private pageNumber: number = 1;
+    private pageNumber = 1;
     private authorID: string;
 
     constructor(data: IPagination) {
@@ -60,24 +61,24 @@ export class Pagination {
         collector.on("collect", async (i) => {
             switch (i.customId as ButtonID) {
                 case "pagination.begin":
-                    this.setPage(1);
+                    await this.setPage(1);
                     break;
 
                 case "pagination.previous":
-                    this.previous();
+                    await this.previous();
                     break;
 
                 case "pagination.stop":
-                    this.stop();
+                    await this.stop();
                     collector.stop("Collector ended!");
                     break;
 
                 case "pagination.next":
-                    this.next();
+                    await this.next();
                     break;
 
                 case "pagination.end":
-                    this.end();
+                    await this.end();
                     break;
             }
         });
@@ -101,6 +102,7 @@ export class Pagination {
                             page: this.pageNumber
                         })!.data.join("\n")
                     )
+                    .setFooter({ text: FooterTime })
                     .build()
             ],
             components: [
@@ -159,6 +161,7 @@ export class Pagination {
                             page
                         })!.data.join("\n")
                     )
+                    .setFooter({ text: FooterTime })
                     .build()
             ]
         });
@@ -186,7 +189,7 @@ export class Pagination {
 
     /** Stops the pagination - WIP */
     public async stop() {
-        this.msg.edit({
+        await this.msg.edit({
             components: [
                 {
                     type: 2,
