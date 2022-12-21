@@ -11,6 +11,7 @@ export class PingCommand extends Command {
             examples: "ping",
             usages: "ping",
             description: "Retrieves the ping of the bot towards Discord and back",
+            required_args: 0,
 
             permissions: {
                 channel: {
@@ -25,19 +26,15 @@ export class PingCommand extends Command {
 
             settings: {
                 nsfw: false,
-                channel: "GUILD",
+                admin: false,
                 owner: false,
                 developer: false,
-
-                cooldown: {
-                    duration: 3000,
-                    limit: 3
-                }
+                cooldown: 3
             }
         });
     }
 
-    public override exec(message: Message<boolean>, args: string[], member: GuildMember, channel: GuildBasedTextChannels, guild: Guild): Promise<void | Message<boolean>> {
+    public override exec(message: Message, _args: string[], _member: GuildMember, channel: GuildBasedTextChannels, guild: Guild): Promise<void | Message> {
         //
     }
 }

@@ -11,6 +11,7 @@ export class EvalCommand extends Command {
             examples: "eval [Code to execute]",
             usages: "eval this.client.fetch;",
             description: "Executes a code inside Discord",
+            required_args: -1,
 
             permissions: {
                 channel: {
@@ -25,19 +26,15 @@ export class EvalCommand extends Command {
 
             settings: {
                 nsfw: false,
-                channel: "GUILD",
+                admin: false,
                 owner: false,
                 developer: true,
-
-                cooldown: {
-                    duration: 3000,
-                    limit: 3
-                }
+                cooldown: 3
             }
         });
     }
 
-    public override exec(message: Message<boolean>, args: string[], member: GuildMember, channel: GuildBasedTextChannels, guild: Guild): Promise<void | Message<boolean>> {
+    public override exec(message: Message<boolean>, args: string[], member: GuildMember, channel: GuildBasedTextChannels, guild: Guild): Promise<void | Message> {
         //
     }
 }
