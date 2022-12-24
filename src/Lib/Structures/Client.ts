@@ -1,14 +1,24 @@
 // The class
 import {
-	Client, Collection, GatewayIntentBits, GuildBan, GuildEmoji, GuildMember, LifetimeSweepOptions, MessageReaction, Partials, Presence, StageInstance, Sticker, SweepOptions, ThreadMember, User, VoiceState
+	Client, Collection, GatewayIntentBits,
+	GuildBan, GuildEmoji, GuildMember,
+	LifetimeSweepOptions, MessageReaction,
+	Partials, Presence, REST, Routes,
+	StageInstance, Sticker, SweepOptions,
+	ThreadMember, User, VoiceState
 } from "discord.js";
 
 import {
-	ArrayFormat, BanLog,
-
-	ChannelFetcher, Command, CommandFetcher, Config, Database, Embed, EmojiFetcher,
-	GuildFetcher, GuildFormat, GuildMemberFetcher, IDatabase, KickLog, Logger, MuteLog, PermissionFormat, Processor, RoleFetcher, StringFormat, UserFetcher, WarnLog
+	ArrayFormat, BanLog, ChannelFetcher,
+	Command, CommandFetcher, Config, Database,
+	Embed, EmojiFetcher, GuildFetcher,
+	GuildFormat, GuildMemberFetcher, IDatabase,
+	ISlashCommand, KickLog, Logger, MuteLog,
+	PermissionFormat, Processor, RoleFetcher,
+	StringFormat, UserFetcher, WarnLog
 } from "@lib";
+import { readdirSync } from "fs";
+import { join, resolve } from "path";
 import pkg from "../../../package.json";
 
 
@@ -68,6 +78,7 @@ export class DiscordClient extends Client {
 	public cooldownCount: Map<string, number> = new Map<string, number>();
 	public cooldown: Map<string, Collection<string, number>> = new Map<string, Collection<string, number>>();
 	public commands: Collection<string, Command>;
+	public slashCommands: Collection<string, ISlashCommand> = new Collection();
 
 	public embed: typeof Embed = Embed;
 	public logger: Logger = new Logger();
@@ -118,6 +129,7 @@ export class DiscordClient extends Client {
 		});
 
 		new Processor(this).listeners();
+		this.initiateSlashCommands();
 		this.commands = new Processor(this).commands();
 
 		this.format.string = StringFormat;
@@ -141,5 +153,43 @@ export class DiscordClient extends Client {
 		}
 
 		super.login(token);
+	}
+
+	getSlashCommands() {
+		const commands = [];
+		const folders = readdirSync(resolve(__dirname));
+		for (const folder of folders) {
+			const files = readdirSync(resolve(join(__dirname, folder))).filter((f) => f.endsWith(".js"));
+			for (const file of files) {
+				const command = require(resolve(join(__dirname, folder, file)));
+				const data = command.data;
+
+				commands.push(data.toJSON());
+				this.slashCommands.set(data.name, data);
+			}
+		}
+
+		return commands;
+	}
+
+	initiateSlashCommands() {
+		const commands = this.getSlashCommands();
+		const rest = new REST({ version: '10' }).setToken(this.token!);
+
+		(async () => {
+			try {
+				this.logger.info(`Started refreshing ${commands.length} application (/) commands.`);
+
+				const data = await rest.put(
+					Routes.applicationCommands(this.user!.id),
+					{ body: commands }
+				);
+
+				// @ts-ignore It's seen as unkown which isn't really the case
+				this.logger.info(`Successfully reloaded ${data.length} application (/) commands.`);
+			} catch (err) {
+				this.logger.fatal(err);
+			}
+		});
 	}
 }

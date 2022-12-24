@@ -5,8 +5,9 @@ export * from "./Types/Database";
 export * from "./Types/Discord";
 export * from "./Types/Punish";
 export * from "./Types/Role";
-export * from "./Types/Frame/Listener";
 export * from "./Types/Frame/Command";
+export * from "./Types/Frame/Listener";
+export * from "./Types/Frame/SlashCommand";
 
 // ================
 // [[[[ CONFIG ]]]]
@@ -23,6 +24,7 @@ export * from "./Structures/Database";
 export * from "./Structures/Embed";
 export * from "./Structures/Base/Command";
 export * from "./Structures/Base/Listener";
+export * from "./Structures/Base/SlashCommand";
 
 // ==================
 // [[[[ FETCHERS ]]]]
