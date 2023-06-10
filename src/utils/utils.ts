@@ -1,7 +1,7 @@
 import { send } from "@sapphire/plugin-editable-commands";
 import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Message } from "discord.js";
 
-import { FooterText, MessageContentMessages, MessageEmbed, RandomLoadingMessage, logger } from "../lib/index";
+import { FooterText, MessageEmbed, RandomLoadingMessage, logger } from "../lib/index";
 
 
 const Log = logger({ name: "Utils" });
@@ -43,11 +43,9 @@ export function sendErrorMessage(
     checkReplied: boolean
 ) {
     if (checkReplied && interaction.replied) return interaction.editReply({
-        content: MessageContentMessages.MEMBER_PERMISSIONS,
         embeds: [embed.build]
     });
     else return interaction.reply({
-        content: MessageContentMessages.MEMBER_PERMISSIONS,
         embeds: [embed.build]
     });
 }

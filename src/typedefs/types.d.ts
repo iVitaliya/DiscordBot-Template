@@ -65,3 +65,18 @@ export type ToArray<T> = T extends any ? T[] : never;
 
 /** The fetch type used for fetching specific items for the guild formatting. */
 export type FetchType =  "name" | "mention";
+
+/** The destination type of where to execute the permissions for. */
+export type DestinationType =
+    | "role"
+    | "channel";
+
+/** The type of user you wish to use.  */
+export type UserType =
+    | "user"
+    | "client";
+
+/** The sort of owner you want to get/use. */
+export type OwnerType =
+    | "owner"
+    | "developer";

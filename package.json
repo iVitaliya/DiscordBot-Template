@@ -29,6 +29,7 @@
     "discord.js": "^14.11.0",
     "dotenv-cra": "^3.0.3",
     "moment": "^2.29.4",
+    "monoxity.db": "^2.0.0",
     "parse-ms": "^3.0.0",
     "reflect-metadata": "^0.1.13"
   },

@@ -5,8 +5,8 @@ import type {
 } from "discord.js";
 import moment from "moment";
 
-import type { RemoveField, ToArray } from "./index";
-import { EmbedThemes, EmbedTypes } from "./index";
+import type { RemoveField, ToArray, EmbedTypes } from "./index";
+import { EmbedThemes } from "./index";
 
 
 const EmbedLimits = {

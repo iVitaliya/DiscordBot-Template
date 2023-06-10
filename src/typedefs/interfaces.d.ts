@@ -1,3 +1,5 @@
+import type { Collection, Role } from "discord.js";
+
 /** An interface used for creating an embed with several pages. */
 export interface IPager<T extends any> {
     /** The array containing all the items wished to be displayed on the pages. */
@@ -31,4 +33,15 @@ export interface IEmbedTypes {
     Settings: { icon: string; color: string; };
     Guilds: { icon: string; color: string; };
     Bugs: { icon: string; color: string; };
+}
+
+/** The user role information to return, coming from permissions/info. */
+export interface UserRoleInfo {
+    highest: {
+        mention: string;
+        id: string;
+        name: string;
+    };
+    roles: Role[];
+    roles_collection: Collection<string, Role>;
 }
