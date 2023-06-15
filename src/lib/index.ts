@@ -1,3 +1,5 @@
+// [[[[ DATABASE ]]]]
+export * from "../database/database";
 // [[[[ FORMATTING ]]]]
 export * from "../formatting/array";
 export * from "../formatting/guild";
@@ -11,6 +13,7 @@ export * from "../resolver/cacheResolver";
 export * from "../resolver/clientResolver";
 export * from "../resolver/environment";
 // [[[[ TYPE DEFINITIONS ]]]]
+export type * from "../typedefs/database";
 export type * from "../typedefs/discord-types";
 export type * from "../typedefs/interfaces";
 export type * from "../typedefs/return-types";

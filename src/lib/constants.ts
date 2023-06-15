@@ -13,13 +13,28 @@ export const RandomLoadingMessage = ["Computing...", "Thinking...", "Cooking som
 
 // Reasons to use for certain things.
 export const Reasons = {
-    "afk": (
+    "afk_started": (
         member: {
             username: string;
             id: string;
         },
+        reason?: string
+    ) => `(${BotName}) User Went AFK | User: ${member.username} (${member.id})${!reason ? "" : ` | Reason: ${reason}`}`,
+    "afk_ended": (
+        member: {
+            username: string;
+            id: string;
+        },
+        reason: string,
         startedAt: string
-    ) => `(${BotName}) AFK Removal | User: ${member.username} (${member.id}) | Went AFK At: ${startedAt}`
+    ) => `(${BotName}) AFK Removal | User: ${member.username} (${member.id}) | Reason: ${reason} | Started: ${startedAt}`,
+    "nickname_reset": (
+        member: {
+            username: string;
+            id: string;
+        },
+        reason: string
+    ) => `(${BotName}) Nickname Reset | User: ${member.username} (${member.id}) | Reason: ${reason}`
 };
 
 export enum Colors {

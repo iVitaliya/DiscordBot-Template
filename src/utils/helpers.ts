@@ -1,10 +1,11 @@
 import {
-    ChannelType, Guild,
-    GuildMember, TextChannel, 
+    ChannelType, Guild, User,
+    GuildMember, TextChannel,
 } from "discord.js";
 import moment from "moment";
 import {
-    FooterText, MessageEmbed, BotName
+    FooterText, MessageEmbed,
+    BotName
 } from "../lib/index";
 
 import type { PermissionResolvable } from "discord.js";
@@ -160,4 +161,35 @@ export function toProperCase(str: string) {
 
     s = s.map(i => i.charAt(0).toUpperCase() + i.substring(1));
     return s.join(' ');
+}
+
+export function identifyGuildID(guild: string | Guild) {
+    return typeof guild === 'string'
+        ? guild
+        : guild.id;
+}
+
+export function identifyUserID(user: string | GuildMember | User) {
+    return typeof user === 'string'
+        ? user
+        : (
+            user instanceof GuildMember
+                ? user.user.id
+                : user.id
+        );
+}
+
+export function userInGuild(guild: Guild, user: User) {
+    const u = guild.client.users.cache.find(
+        (x) => x.username.toLowerCase() === user.username.toLowerCase() ||
+            x.tag.toLowerCase() === user.tag.toLowerCase() ||
+            x.id === `<@!${user.id}>`.replace(/[\\<>@!]/g, '')
+    );
+
+    if (!(u instanceof User)) return false;
+    else return true;
+}
+
+export function fetchMessageLink(guildID: string, channelID: string, messageID: string) {
+    return `https://discord.com/channels/${guildID}/${channelID}/${messageID}`;
 }
